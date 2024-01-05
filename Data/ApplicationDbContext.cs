@@ -11,4 +11,11 @@ public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<ApplicationUser> ApplicationUser {get; set;}
+    public DbSet<MenuItem> MenuItems {get; set;}
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        Seed.SeedData(builder);
+    }
 }

@@ -221,6 +221,67 @@ namespace RedMangoShop.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("RedMangoShop.Models.MenuItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("SpecialTag")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MenuItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Category = "Appetizer",
+                            Description = "Вкусный ролл",
+                            Name = "Spring Roll",
+                            Price = 7.9900000000000002,
+                            SpecialTag = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Category = "Appetizer",
+                            Description = "Чтото непонятное",
+                            Name = "Idli",
+                            Price = 8.9900000000000002,
+                            SpecialTag = ""
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Category = "Appetizer",
+                            Description = "Странное блюдо",
+                            Name = "Panu Pury",
+                            Price = 8.5,
+                            SpecialTag = "Best Seller"
+                        });
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
