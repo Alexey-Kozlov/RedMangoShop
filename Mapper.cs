@@ -60,5 +60,11 @@ public class MapperProfileMenu: Profile
                 })
             );
 
+        CreateMap<RegisterRequestDTO, ApplicationUser>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.UserName))
+            .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Name.ToUpper()))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
     }
 }
