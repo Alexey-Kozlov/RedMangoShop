@@ -43,7 +43,11 @@ builder.Services.AddAuthentication(p =>
 });
 
 builder.Services.AddCors();
-builder.Services.AddControllers();
+//если не указать Newtonsoft.Json.ReferenceLoopHandling.Ignore - будет ошибка бесконечного цикла
+//при возврате объекта EF из-за вложенности "include"
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -81,6 +85,7 @@ var mapper = MappingProfile.InitAutoMapper().CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 if (app.Environment.IsDevelopment())
 {

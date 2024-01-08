@@ -1,6 +1,8 @@
 using RedMangoShop.Models;
 using RedMangoShop.Models.DTO;
 using AutoMapper;
+using RedMangoShop.Utility;
+using Microsoft.AspNetCore.SignalR;
 
 namespace RedMangoShop;
 
@@ -66,5 +68,32 @@ public class MapperProfileMenu: Profile
             .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Name.ToUpper()))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
 
+        CreateMap<OrderHeaderCreateDTO, OrderHeader>()
+            .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.ApplicationUserId))
+            .ForMember(dest => dest.PickupName, opt => opt.MapFrom(src => src.PickupName))
+            .ForMember(dest => dest.PickupEmail, opt => opt.MapFrom(src => src.PickupEmail))
+            .ForMember(dest => dest.PickupPhoneNumber, opt => opt.MapFrom(src => src.PickupPhoneNumber))
+            .ForMember(dest => dest.OrderTotal, opt => opt.MapFrom(src => src.OrderTotal))
+            .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => DateTime.Now))
+            .ForMember(dest => dest.StripePaymentIntentId, opt => opt.MapFrom(src => src.StripePaymentIntentId))
+            .ForMember(dest => dest.TotalItems, opt => opt.MapFrom(src => src.TotalItems))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+
+        CreateMap<OrderDetailsCreateDTO, OrderDetails>()
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.ItemName))
+            .ForMember(dest => dest.MenuItemId, opt => opt.MapFrom(src => src.MenuItemId))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
+
+        CreateMap<OrderHeaderUpdateDTO, OrderHeader>()
+            .ForMember(dest => dest.PickupName, opt => 
+            {
+                opt.PreCondition(src => !string.IsNullOrEmpty(src.PickupName));
+                opt.MapFrom(src => src.PickupName);
+            })
+            .ForMember(dest => dest.PickupEmail, opt => opt.Condition(src => !string.IsNullOrEmpty(src.PickupEmail)))
+            .ForMember(dest => dest.PickupPhoneNumber, opt => opt.Condition(src => !string.IsNullOrEmpty(src.PickupPhoneNumber)))
+            .ForMember(dest => dest.StripePaymentIntentId, opt => opt.Condition(src => !string.IsNullOrEmpty(src.StripePaymentIntentId)))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
     }
 }

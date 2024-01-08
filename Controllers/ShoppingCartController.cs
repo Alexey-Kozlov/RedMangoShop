@@ -20,6 +20,30 @@ public class ShoppingCartController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<ApiResponse<ShoppingCart>>> GetShoppingCart(string userId)
+    {
+        var response = new ApiResponse<ShoppingCart>();
+        if(string.IsNullOrEmpty(userId))
+        {
+            response.StatusCode = HttpStatusCode.OK;
+            response.Result = new ShoppingCart();
+            return Ok(response);
+        }
+        var shoppingCart = await _db.ShoppingCarts
+            .Include(p => p.CartItems)
+            .ThenInclude(p => p.MenuItem)
+            .FirstOrDefaultAsync(p => p.UserId == userId);
+        if(shoppingCart.CartItems != null && shoppingCart.CartItems.Any())
+        {
+            shoppingCart.CartTotal = shoppingCart.CartItems.Sum(p => p.Quantity * p.MenuItem.Price);
+        }
+        
+        response.StatusCode = HttpStatusCode.OK;
+        response.Result = shoppingCart;
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<ActionResult<ApiResponse<object>>> AddOrUpdateItemInCart(string userId, int menuItemId, int itemQuantityChanged)
     {
