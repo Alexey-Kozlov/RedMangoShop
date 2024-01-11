@@ -90,14 +90,14 @@ public class ShoppingCartController : ControllerBase
                 }
             }
             else
-            {
-                cartItem.Quantity += itemQuantityChanged;
-                if(cartItem.Quantity <= 0)        
+            {                
+                if(itemQuantityChanged == 0)        
                 {
                     _db.CartItems.Remove(cartItem);
                 }
                 else
                 {
+                    cartItem.Quantity += itemQuantityChanged;
                     _db.CartItems.Update(cartItem);
                 }
             }
