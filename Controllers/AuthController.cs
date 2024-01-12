@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
         var response = new ApiResponse<object>();
         try
         {
-            var user = await _db.ApplicationUser.FirstOrDefaultAsync(p => p.UserName.ToLower() == registerRequestDTO.UserName.ToLower());
+            var user = await _db.ApplicationUser.FirstOrDefaultAsync(p => p.UserName.ToLower() == registerRequestDTO.Login.ToLower());
             if (user != null)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
@@ -90,7 +90,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
     {
         var response = new ApiResponse<LoginResponseDTO>();
-        var user = await _db.ApplicationUser.FirstOrDefaultAsync(p => p.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
+        var user = await _db.ApplicationUser.FirstOrDefaultAsync(p => p.UserName.ToLower() == loginRequestDTO.Login.ToLower());
         if (user == null)
         {
             response.StatusCode = HttpStatusCode.BadRequest;
@@ -114,8 +114,9 @@ public class AuthController : ControllerBase
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim("FullName", user.Name),
-                new Claim("Id", user.Id.ToString()),
+                new Claim("name", user.Name),
+                new Claim("id", user.Id.ToString()),
+                new Claim("login", user.UserName),
                 new Claim(ClaimTypes.Role, string.Join(",", roles))
             }),
             Expires = DateTime.UtcNow.AddDays(1),
@@ -126,7 +127,8 @@ public class AuthController : ControllerBase
         var loginResponse = new LoginResponseDTO()
         {
             Email = user.Email,
-            Token = tokenHandler.WriteToken(token)
+            Token = tokenHandler.WriteToken(token),
+            Login = user.UserName
         };
         if (string.IsNullOrEmpty(loginResponse.Token))
         {
@@ -135,21 +137,21 @@ public class AuthController : ControllerBase
             response.ErrorMessages.Add("Ошибка пользователя или пароля");
             return BadRequest(response);
         }
-            response.StatusCode = HttpStatusCode.OK;
-            response.IsSuccess = true;
-            response.Result = loginResponse;
-            return Ok(response);
+        response.StatusCode = HttpStatusCode.OK;
+        response.IsSuccess = true;
+        response.Result = loginResponse;
+        return Ok(response);
     }
 
     [HttpGet("TestAuth")]
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
     public async Task<string> TestAuth()
     {
         return await Task.FromResult("Ok");
     }
 
     [HttpGet("TestAuthAll")]
-    [Authorize(Roles ="admin, customer")]
+    [Authorize(Roles = "admin, customer")]
     public async Task<string> TestAuthAll()
     {
         return await Task.FromResult("Ok");

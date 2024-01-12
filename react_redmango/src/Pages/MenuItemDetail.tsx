@@ -4,6 +4,8 @@ import { useGetMenuItemByIdQuery } from '../Api/MenuItemApi';
 import { useNavigate } from 'react-router-dom';
 import { useUpdateShoppingCartMutation } from '../Api/ShoppingCartApi';
 import { Loader, MainLoader } from '../Components/Page/Common';
+import { IResponse } from '../Interfaces';
+import { toastNotify } from '../Helper';
 
 const empty = require('../../src/Assets/Images/Empty.png');
 //const alex - 9f771410-7aac-4648-8d19-b6cc488381ae
@@ -29,13 +31,18 @@ function MenuItemDetail() {
 
     const handleAddToCart = async () => {
         setIsAddingToCart(true);
-        const response = await updateShoppingCart({
+        const response: IResponse = await updateShoppingCart({
             menuItemId:menuItemId, 
             itemQuantityChanged:quantity, 
             userId:'9f771410-7aac-4648-8d19-b6cc488381ae'
         });
+        if(response.data && response.data.isSuccess){
+            toastNotify(`Товар '${data.result.name}' добавлен в корзину!`);
+        }
         setIsAddingToCart(false);
     }
+
+
 
     return (
         <div className='container pt-4 pt-md-5'>

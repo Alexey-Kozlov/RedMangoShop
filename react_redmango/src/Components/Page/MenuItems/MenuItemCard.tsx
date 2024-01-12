@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { IMenuItem } from '../../../Interfaces';
+import { IMenuItem, IResponse } from '../../../Interfaces';
 import { Link } from 'react-router-dom';
 import { useUpdateShoppingCartMutation } from '../../../Api/ShoppingCartApi';
 import { Loader } from '../Common';
+import { toastNotify } from '../../../Helper';
+import { Type } from 'react-toastify/dist/utils';
 const empty = require('../../../../src/Assets/Images/Empty.png');
 
 interface Props {
@@ -16,11 +18,14 @@ function MenuItemCard(props: Props) {
 
     const handleAddToCart = async () => {
         setIsAddingToCart(true);
-        const response = await updateShoppingCart({
+        const response: IResponse = await updateShoppingCart({
             menuItemId:props.menuItem.id, 
             itemQuantityChanged:1, 
             userId:'9f771410-7aac-4648-8d19-b6cc488381ae'
         });
+        if(response.data && response.data.isSuccess){
+            toastNotify(`Товар '${props.menuItem.name}' добавлен в корзину!`);
+        }
         setIsAddingToCart(false);
     }
 

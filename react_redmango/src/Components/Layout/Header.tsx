@@ -1,15 +1,26 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom';
-import { ICartItem } from '../../Interfaces';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { ICartItem, IUser } from '../../Interfaces';
 import { RootState } from '../../Store/Redux/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { emptyUserState, setAuthUser } from '../../Store/Redux/authSlice';
 
 const logo = require("../../Assets/Images/mango.jpg");
 
 function Header() {
     const shoppingCartStore: ICartItem[] = useSelector(
         (state: RootState) => state.shoppingCartStore.cartItems ?? []
-    )
+    );
+
+    const userData : IUser = useSelector((state:RootState) => state.authStore);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem('RM_Token');
+        dispatch(setAuthUser({...emptyUserState}));
+        navigate('/');
+    }
+
   return (
       <div>
           <nav className="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -17,13 +28,20 @@ function Header() {
                   <NavLink className="nav-link" aria-current="page" to="/">
                       <img src={logo} style={{ height: "40px" }} className='m-1' />
                   </NavLink>
-                  <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <button
+                      className="navbar-toggler"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#navbarSupportedContent"
+                      aria-controls="navbarSupportedContent"
+                      aria-expanded="false"
+                      aria-label="Toggle navigation">
                       <span className="navbar-toggler-icon"></span>
                   </button>
                   <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                      <ul className="navbar-nav me-auto mb-2 mb-lg-0 w-100">
                           <li className="nav-item">
-                              <NavLink className="nav-link" aria-current="page" to="/">Home</NavLink>
+                              <NavLink className="nav-link" aria-current="page" to="/">Главная</NavLink>
                           </li>
                           <li className="nav-item">
                               <NavLink className="nav-link" aria-current="page" to="/shoppingCart">
@@ -41,6 +59,39 @@ function Header() {
                                   <li><a className="dropdown-item" href="#">Something else here</a></li>
                               </ul>
                           </li>
+                          <div className='d-flex' style={{marginLeft:'auto'}}>
+                            {userData.id && (<>
+                            <li className='nav-item'>
+                            <button
+                                    className='nav-link active'
+                                    style={{border:0, cursor:'pointer', background:'transparent' }}
+                                    >
+                                        Здравствуйте, {userData.name}
+                                    </button>
+                            </li>
+                            <li className='nav-item'>
+                                <button
+                                    className='btn btn-success btn-outlined rounded-pill text-white mx-2'
+                                    style={{border:'none', height:'40px', width:'100px'}}
+                                    onClick={()=>handleLogout()}
+                                    >
+                                        Выход
+                                    </button>
+                            </li></>)}
+                            
+                            {!userData.id && (<>                           
+                            <li className='nav-item text-white'>
+                                <NavLink className='nav-link' to='/register'>Регистрация</NavLink>
+                            </li>
+                            <li className='nav-item text-white'>
+                                <NavLink 
+                                    className='btn btn-success btn-outlined rounded-pill text-white mx-2'
+                                    style={{border:'none', height:'40px', width:'100px'}}
+                                    to='/login'>
+                                        Вход
+                                    </NavLink>
+                            </li></>)}
+                          </div>
                       </ul>
                   </div>
               </div>
