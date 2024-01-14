@@ -46,17 +46,21 @@ function Header() {
                           <li className="nav-item">
                               <NavLink className="nav-link" aria-current="page" to="/shoppingCart">
                                 <i className='bi bi-cart'></i>&nbsp;
-                                {shoppingCartStore.length ? `(${shoppingCartStore.length})`:''}
+                                {userData.id && shoppingCartStore.length ? `(${shoppingCartStore.length})`:''}
                               </NavLink>
                           </li>
+                          {userData.id &&
+                            <li className="nav-item">
+                                <NavLink className="nav-link" aria-current="page" to="/orders">Заказы</NavLink>
+                            </li>
+                          }
                           <li className="nav-item dropdown">
                               <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                   Панель управления
                               </a>
                               <ul className="dropdown-menu">
-                                  <li><a className="dropdown-item" href="#">Action</a></li>
-                                  <li><a className="dropdown-item" href="#">Another action</a></li>
-                                  <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                  <li><NavLink className="dropdown-item" to="/authentication">Common</NavLink></li>
+                                  <li><NavLink className="dropdown-item" to="/authorization">Admin</NavLink></li>
                               </ul>
                           </li>
                           <div className='d-flex' style={{marginLeft:'auto'}}>

@@ -1,23 +1,26 @@
-import React, { useState } from 'react'
-import { ICartItem } from '../../../Interfaces'
+import React, {useEffect, useState } from 'react'
+import { ICartItem, IResponse, IUser } from '../../../Interfaces'
 import { RootState } from '../../../Store/Redux/store'
 import { useSelector } from 'react-redux';
 import { inputHelper } from '../../../Helper';
 import { Loader } from '../Common';
+import { useInitPaymentMutation } from '../../../Api/PaymentApi';
+import { useNavigate } from 'react-router-dom';
 
 function CartDetails() {
 
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const shoppingCartStore: ICartItem[] = useSelector(
         (state: RootState) => state.shoppingCartStore.cartItems ?? []
     )
     let totalSum = 0;
     let totalItems = 0;
 
+    let userData : IUser = useSelector((state: RootState) => state.authStore);
     const initialUserData = {
-        name: '',
-        email: '',
-        phone: ''
+        name: userData.name,
+        phone: userData.phone
     }
 
     shoppingCartStore?.map((item:ICartItem) => {
@@ -27,6 +30,8 @@ function CartDetails() {
     });
 
     const [userInput, setUserInput] = useState(initialUserData);
+    const [initPayment] = useInitPaymentMutation();
+
     const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const tempData = inputHelper(e, userInput);
         setUserInput(tempData);
@@ -35,6 +40,13 @@ function CartDetails() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
+        const {data}: IResponse = await initPayment(userData.id);
+        navigate('/payment', {
+            state:{
+                apiResult: data?.result,
+                userInput
+            }
+        })
     }
 
   return (
@@ -45,32 +57,21 @@ function CartDetails() {
         <hr />
         <form onSubmit={handleSubmit} className='col-10 mx-auto'>
             <div className='form-group mt-3'>
-                Наименование
+                Покупатель
                 <input 
                 type='text' 
-                value={userInput.name}
+                value={userInput.name ? userInput.name : initialUserData.name}
                 onChange={handleUserInput}
                 className='form-control' 
-                placeholder='Наименование...' 
+                placeholder='Покупатель...' 
                 name='name' 
-                required />
-            </div>
-            <div className='form-group mt-3'>
-                Эл.почта
-                <input 
-                type='email' 
-                value={userInput.email}
-                onChange={handleUserInput}
-                className='form-control' 
-                placeholder='Эл.почта...' 
-                name='email' 
                 required />
             </div>
             <div className='form-group mt-3'>
                 Телефон
                 <input 
-                type='number' 
-                value={userInput.phone}
+                type='text' 
+                value={userInput.phone ? userInput.phone : initialUserData.phone}
                 onChange={handleUserInput}
                 className='form-control' 
                 placeholder='Телефон...' 

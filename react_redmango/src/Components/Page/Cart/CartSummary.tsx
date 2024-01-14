@@ -1,5 +1,5 @@
 import React from 'react'
-import { ICartItem } from '../../../Interfaces';
+import { ICartItem, IUser } from '../../../Interfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Store/Redux/store';
 import { removeFromCart, updateQuantity } from '../../../Store/Redux/shoppingCartSlice';
@@ -13,6 +13,7 @@ function CartSummary() {
     )
     const dispatch = useDispatch();
     const [updateShoppingCart]  = useUpdateShoppingCartMutation();
+    const userData: IUser = useSelector((state: RootState) => state.authStore);
 
     const handleQuantity = (quantity:number, cartItem: ICartItem) => {
         if(cartItem.quantity === 1 && quantity === -1){
@@ -21,7 +22,7 @@ function CartSummary() {
         updateShoppingCart({
             menuItemId : cartItem.menuItem.id, 
             itemQuantityChanged: quantity, 
-            userId: '9f771410-7aac-4648-8d19-b6cc488381ae'
+            userId: userData.id
         });
         if(quantity == 0 ){
             dispatch(removeFromCart({cartItem: cartItem}));

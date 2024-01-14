@@ -68,9 +68,8 @@ public class MapperProfileMenu: Profile
 
         CreateMap<OrderHeaderCreateDTO, OrderHeader>()
             .ForMember(dest => dest.ApplicationUserId, opt => opt.MapFrom(src => src.ApplicationUserId))
-            .ForMember(dest => dest.PickupName, opt => opt.MapFrom(src => src.PickupName))
-            .ForMember(dest => dest.PickupEmail, opt => opt.MapFrom(src => src.PickupEmail))
-            .ForMember(dest => dest.PickupPhoneNumber, opt => opt.MapFrom(src => src.PickupPhoneNumber))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Phone))
             .ForMember(dest => dest.OrderTotal, opt => opt.MapFrom(src => src.OrderTotal))
             .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => DateTime.Now))
             .ForMember(dest => dest.StripePaymentIntentId, opt => opt.MapFrom(src => src.StripePaymentIntentId))
@@ -84,13 +83,12 @@ public class MapperProfileMenu: Profile
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
 
         CreateMap<OrderHeaderUpdateDTO, OrderHeader>()
-            .ForMember(dest => dest.PickupName, opt => 
+            .ForMember(dest => dest.Name, opt => 
             {
-                opt.PreCondition(src => !string.IsNullOrEmpty(src.PickupName));
-                opt.MapFrom(src => src.PickupName);
+                opt.PreCondition(src => !string.IsNullOrEmpty(src.Name));
+                opt.MapFrom(src => src.Name);
             })
-            .ForMember(dest => dest.PickupEmail, opt => opt.Condition(src => !string.IsNullOrEmpty(src.PickupEmail)))
-            .ForMember(dest => dest.PickupPhoneNumber, opt => opt.Condition(src => !string.IsNullOrEmpty(src.PickupPhoneNumber)))
+            .ForMember(dest => dest.Phone, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Phone)))
             .ForMember(dest => dest.StripePaymentIntentId, opt => opt.Condition(src => !string.IsNullOrEmpty(src.StripePaymentIntentId)))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
     }

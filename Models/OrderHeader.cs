@@ -8,9 +8,8 @@ public class OrderHeader
 {
     [Key]
     public int OrderHeaderId {get; set;}
-    public string PickupName {get; set;}
-    public string PickupPhoneNumber {get; set;}
-    public string PickupEmail {get; set;}
+    public string Name {get; set;}
+    public string Phone {get; set;}
     public string ApplicationUserId {get; set;}
     [ForeignKey("ApplicationUserId")]
     public ApplicationUser User {get; set;}

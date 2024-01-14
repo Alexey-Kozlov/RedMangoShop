@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { IMenuItem, IResponse } from '../../../Interfaces';
-import { Link } from 'react-router-dom';
+import { IMenuItem, IResponse, IUser } from '../../../Interfaces';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUpdateShoppingCartMutation } from '../../../Api/ShoppingCartApi';
 import { Loader } from '../Common';
 import { toastNotify } from '../../../Helper';
-import { Type } from 'react-toastify/dist/utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../Store/Redux/store';
 const empty = require('../../../../src/Assets/Images/Empty.png');
 
 interface Props {
@@ -15,13 +16,19 @@ function MenuItemCard(props: Props) {
 
     const [isAddintToCart, setIsAddingToCart] = useState<boolean>(false);
     const [updateShoppingCart] = useUpdateShoppingCartMutation();
+    const userData: IUser = useSelector((state: RootState) => state.authStore);
+    const navigate = useNavigate();
 
     const handleAddToCart = async () => {
+        if(!userData.id){
+            navigate('/login');
+            return;
+        }
         setIsAddingToCart(true);
         const response: IResponse = await updateShoppingCart({
             menuItemId:props.menuItem.id, 
             itemQuantityChanged:1, 
-            userId:'9f771410-7aac-4648-8d19-b6cc488381ae'
+            userId:userData.id
         });
         if(response.data && response.data.isSuccess){
             toastNotify(`Товар '${props.menuItem.name}' добавлен в корзину!`);

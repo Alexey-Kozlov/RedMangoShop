@@ -352,19 +352,16 @@ namespace RedMangoShop.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("text");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("OrderTotal")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("PickupEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PickupName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PickupPhoneNumber")
+                    b.Property<string>("Phone")
                         .HasColumnType("text");
 
                     b.Property<int>("Status")

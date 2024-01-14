@@ -4,9 +4,8 @@ namespace RedMangoShop.Models.DTO;
 
 public class OrderHeaderCreateDTO
 {
-    public string PickupName {get; set;}
-    public string PickupPhoneNumber {get; set;}
-    public string PickupEmail {get; set;}
+    public string Name {get; set;}
+    public string Phone {get; set;}
     public string ApplicationUserId {get; set;}
     public double OrderTotal {get; set;}
     public string StripePaymentIntentId {get; set;}

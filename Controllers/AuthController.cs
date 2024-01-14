@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
 
     private readonly ApplicationDbContext _db;
     private readonly IMapper _mapper;
-    private string secretKey;
+    private readonly string _secretKey;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     public AuthController(ApplicationDbContext db, IMapper mapper, IConfiguration configuration,
@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
     {
         _db = db;
         _mapper = mapper;
-        secretKey = configuration.GetValue<string>("ApiSettings:Secret");
+        _secretKey = configuration.GetValue<string>("ApiSettings:Secret");
         _userManager = userManager;
         _roleManager = roleManager;
     }
@@ -109,14 +109,14 @@ public class AuthController : ControllerBase
 
         var roles = await _userManager.GetRolesAsync(user);
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(secretKey);
+        var key = Encoding.ASCII.GetBytes(_secretKey);
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim("name", user.Name),
-                new Claim("id", user.Id.ToString()),
-                new Claim("login", user.UserName),
+                new Claim("id", user.Id),
+                new Claim("login", user.UserName!),
                 new Claim(ClaimTypes.Role, string.Join(",", roles))
             }),
             Expires = DateTime.UtcNow.AddDays(1),

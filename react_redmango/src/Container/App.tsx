@@ -1,19 +1,21 @@
 
 import { Route, Routes } from 'react-router-dom';
 import { Footer, Header } from '../Components/Layout';
-import { Home, Login, MenuItemDetail, NotFound, Register, ShoppingCart } from '../Pages';
-import { useDispatch } from 'react-redux';
+import { AccessDenied, Home, Login, MenuItemDetail, NotFound, OrderDetail, Orders, Payment, Register, ShoppingCart, TestAuthAdmin, TestAuthCommon } from '../Pages';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useGetShoppingCartQuery } from '../Api/ShoppingCartApi';
 import { setShoppingCart } from '../Store/Redux/shoppingCartSlice';
 import { IUser } from '../Interfaces';
 import { jwtDecode } from 'jwt-decode';
 import { setAuthUser } from '../Store/Redux/authSlice';
+import { RootState } from '../Store/Redux/store';
 
 function App() {
 
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetShoppingCartQuery('9f771410-7aac-4648-8d19-b6cc488381ae');
+  const userData: IUser = useSelector((state: RootState) => state.authStore);
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id);
 
   useEffect(()=>{
     const token = localStorage.getItem('RM_Token');
@@ -38,6 +40,12 @@ function App() {
           <Route path='/ShoppingCart' element={<ShoppingCart />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
+          <Route path='/authorization' element={<TestAuthAdmin />}></Route>
+          <Route path='/authentication' element={<TestAuthCommon />}></Route>
+          <Route path='/accessDenied' element={<AccessDenied />}></Route>
+          <Route path='/payment' element={<Payment />}></Route>
+          <Route path='/orders' element={<Orders />}></Route>
+          <Route path='/orderDetail/:id' element={<OrderDetail />}></Route>
           <Route path='*' element={<NotFound />}></Route>
         </Routes>
       </div>
