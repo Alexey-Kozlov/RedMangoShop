@@ -1,3 +1,4 @@
+import { Status_Constant } from "../Utility/Constant";
 import IOrder from "./IOrder";
 
 export default interface IOrderHeader {
@@ -8,7 +9,7 @@ export default interface IOrderHeader {
     orderTotal: number;
     orderDate: Date;
     stripePaymentIntentId: string;
-    status: number;
+    status: Status_Constant;
     totalItems: number;
     orderDetails: IOrder[];
 }

@@ -1,7 +1,7 @@
 
 import { Route, Routes } from 'react-router-dom';
 import { Footer, Header } from '../Components/Layout';
-import { AccessDenied, Home, Login, MenuItemDetail, NotFound, OrderDetail, Orders, Payment, Register, ShoppingCart, TestAuthAdmin, TestAuthCommon } from '../Pages';
+import { AccessDenied, AllOrders, Home, Login, MenuItemDetail, NotFound, OrderDetail, Orders, Payment, Register, ShoppingCart, TestAuthAdmin, TestAuthCommon } from '../Pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useGetShoppingCartQuery } from '../Api/ShoppingCartApi';
@@ -45,6 +45,7 @@ function App() {
           <Route path='/accessDenied' element={<AccessDenied />}></Route>
           <Route path='/payment' element={<Payment />}></Route>
           <Route path='/orders' element={<Orders />}></Route>
+          <Route path='/allOrders' element={<AllOrders />}></Route>
           <Route path='/orderDetail/:id' element={<OrderDetail />}></Route>
           <Route path='*' element={<NotFound />}></Route>
         </Routes>

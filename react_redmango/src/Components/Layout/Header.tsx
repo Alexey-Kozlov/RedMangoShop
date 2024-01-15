@@ -4,6 +4,7 @@ import { ICartItem, IUser } from '../../Interfaces';
 import { RootState } from '../../Store/Redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { emptyUserState, setAuthUser } from '../../Store/Redux/authSlice';
+import { Roles_Constant } from '../../Utility/Constant';
 
 const logo = require("../../Assets/Images/mango.jpg");
 
@@ -43,25 +44,29 @@ function Header() {
                           <li className="nav-item">
                               <NavLink className="nav-link" aria-current="page" to="/">Главная</NavLink>
                           </li>
-                          <li className="nav-item">
-                              <NavLink className="nav-link" aria-current="page" to="/shoppingCart">
-                                <i className='bi bi-cart'></i>&nbsp;
-                                {userData.id && shoppingCartStore.length ? `(${shoppingCartStore.length})`:''}
-                              </NavLink>
-                          </li>
                           {userData.id &&
                             <li className="nav-item">
                                 <NavLink className="nav-link" aria-current="page" to="/orders">Заказы</NavLink>
                             </li>
                           }
-                          <li className="nav-item dropdown">
-                              <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                  Панель управления
-                              </a>
-                              <ul className="dropdown-menu">
-                                  <li><NavLink className="dropdown-item" to="/authentication">Common</NavLink></li>
-                                  <li><NavLink className="dropdown-item" to="/authorization">Admin</NavLink></li>
-                              </ul>
+                          {userData.role == Roles_Constant.ADMIN && (
+                              <li className="nav-item dropdown">
+                                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      Панель управления
+                                  </a>
+                                  <ul className="dropdown-menu">
+                                      <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/allOrders')}>Все заказы</li>
+                                      <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/authentication')}>Common</li>
+                                      <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/authorization')}>Admin</li>
+                                  </ul>
+                              </li>
+                          )}
+
+                          <li className="nav-item">
+                              <NavLink className="nav-link" aria-current="page" to="/shoppingCart">
+                                <i className='bi bi-cart'></i>&nbsp;
+                                {userData.id && shoppingCartStore.length ? `(${shoppingCartStore.length})`:''}
+                              </NavLink>
                           </li>
                           <div className='d-flex' style={{marginLeft:'auto'}}>
                             {userData.id && (<>

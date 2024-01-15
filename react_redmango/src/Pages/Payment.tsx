@@ -37,10 +37,10 @@ function Payment() {
             orderTotal: orderTotal,
             applicationUserId: apiResult.userId,
             stripePaymentIntentId: apiResult.stripePaymentIntentId,
-            status: Status_Constant.COMPLETED,
+            status: Status_Constant.CONFIRMED,
             orderDetailsDTO: orderDetailsDTO
         })
-        if (response.data!.result && response.data!.result.status == Status_Constant.COMPLETED.toString()) {
+        if (response.data!.result && response.data!.result.status == Status_Constant.CONFIRMED.toString()) {
             navigate('/');
         }
 

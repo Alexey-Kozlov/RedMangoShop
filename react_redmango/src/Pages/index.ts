@@ -10,6 +10,7 @@ import TestAuthCommon from "./TestAuthCommon";
 import Payment from "./Payment";
 import Orders from "./Orders";
 import OrderDetail from "./OrderDetail";
+import AllOrders from "./AllOrders";
 
 export { 
     Home, 
@@ -23,5 +24,6 @@ export {
     TestAuthCommon,
     Payment,
     Orders,
-    OrderDetail
+    OrderDetail,
+    AllOrders
      };
