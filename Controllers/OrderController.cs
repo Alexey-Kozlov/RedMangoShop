@@ -1,15 +1,19 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RedMangoShop.Data;
 using RedMangoShop.Models;
 using RedMangoShop.Models.DTO;
+using RedMangoShop.Utility;
 using System.Net;
+using System.Text.Json;
 
 namespace RedMangoShop.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class OrderController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
@@ -21,21 +25,37 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<List<OrderHeader>>>> GetOrders(string userId)
+    public async Task<ActionResult<ApiResponse<List<OrderHeader>>>> GetOrders(string userId, string search, 
+        string status, int pageNumber = 1, int pageSize = 5)
     {
         var response = new ApiResponse<List<OrderHeader>>();
         var orderHeaders = _db.OrderHeaders
             .Include(p => p.OrderDetails)
             .ThenInclude(p => p.MenuItem)
-            .OrderByDescending(p => p.OrderHeaderId);
+            .OrderByDescending(p => p.OrderHeaderId) as IQueryable<OrderHeader>;
         if(!string.IsNullOrEmpty(userId))
         {
-            response.Result = await orderHeaders.Where(p => p.ApplicationUserId == userId).ToListAsync();
+            orderHeaders = orderHeaders.Where(p => p.ApplicationUserId == userId);
         }
-        else
+        if(!string.IsNullOrEmpty(search))
         {
-            response.Result = await orderHeaders.ToListAsync();
+            orderHeaders = orderHeaders.Where(p => p.Phone.Contains(search) || 
+            p.Name.ToLower().Contains(search.ToLower()));
         }
+        if(!string.IsNullOrEmpty(status))
+        {
+            orderHeaders = orderHeaders.Where(p => p.Status == (StatusEnumerator)Enum.Parse(typeof(StatusEnumerator), status));
+        }
+        var pagination = new Pagination()
+        {
+            CurrentPage = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = await orderHeaders.CountAsync()
+        };
+
+        Response.Headers.Add("X-Pagination",JsonSerializer.Serialize(pagination));
+
+        response.Result = await orderHeaders.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         response.StatusCode = HttpStatusCode.OK;
         return Ok(response);
     }

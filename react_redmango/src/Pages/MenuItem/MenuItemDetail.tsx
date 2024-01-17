@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { useGetMenuItemByIdQuery } from '../Api/MenuItemApi';
+import { useGetMenuItemByIdQuery } from '../../Api/MenuItemApi';
 import { useNavigate } from 'react-router-dom';
-import { useUpdateShoppingCartMutation } from '../Api/ShoppingCartApi';
-import { Loader, MainLoader } from '../Components/Page/Common';
-import { IResponse, IUser } from '../Interfaces';
-import { toastNotify } from '../Helper';
+import { useUpdateShoppingCartMutation } from '../../Api/ShoppingCartApi';
+import { Loader, MainLoader } from '../../Components/Page/Common';
+import { IResponse, IUser } from '../../Interfaces';
+import { toastNotify } from '../../Helper';
 import { useSelector } from 'react-redux';
-import { RootState } from '../Store/Redux/store';
+import { RootState } from '../../Store/Redux/store';
 
-const empty = require('../../src/Assets/Images/Empty.png');
+const empty = require('../../../src/Assets/Images/Empty.png');
 
 function MenuItemDetail() {
 

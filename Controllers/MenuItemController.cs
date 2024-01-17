@@ -1,9 +1,11 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RedMangoShop.Data;
 using RedMangoShop.Models;
 using RedMangoShop.Models.DTO;
+using RedMangoShop.Utility;
 using System.Net;
 
 namespace RedMangoShop.Controllers;
@@ -12,6 +14,10 @@ namespace RedMangoShop.Controllers;
 [Route("api/MenuItem")]
 public class MenuItemController : ControllerBase
 {
+    private const string ORDER_PRICE_LOW = "Цена, понижение";
+    private const string ORDER_PRICE_HIGH = "Цена, повышение";
+    private const string ORDER_NAME_LOW = "Наименование, Я - А";
+    private const string ORDER_NAME_HIGH = "Наименование, А - Я";
     private readonly ApplicationDbContext _db;
     private readonly IMapper _mapper;
     public MenuItemController(ApplicationDbContext db, IMapper mapper)
@@ -21,12 +27,29 @@ public class MenuItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetMenuItems()
+    public async Task<IActionResult> GetMenuItems(string search, string category, string sortType)
     {
         var response = new ApiResponse<IEnumerable<MenuItem>>();
-        response.Result = await _db.MenuItems.ToListAsync();
-        response.StatusCode = HttpStatusCode.OK;
+        var result = _db.MenuItems as IQueryable<MenuItem>;
+        if(!string.IsNullOrEmpty(search))
+        {
+            result = result.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+        }
+        if(!string.IsNullOrEmpty(category) && category != "Все")
+        {
+            result = result.Where(p => p.Category == category);
+        }
 
+        result = sortType switch
+        {
+            ORDER_NAME_HIGH => result.OrderBy(p => p.Name),
+            ORDER_NAME_LOW => result.OrderByDescending(p => p.Name),
+            ORDER_PRICE_HIGH => result.OrderBy(p => p.Price),
+            ORDER_PRICE_LOW => result.OrderByDescending(p => p.Price),
+            _ => result.OrderBy(p => p.Name),
+        };
+        response.Result = await result.ToListAsync();                 
+        response.StatusCode = HttpStatusCode.OK;
         return Ok(response);
     }
 
@@ -50,6 +73,7 @@ public class MenuItemController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles =Constant.Role_Admin)]
     public async Task<ActionResult<ApiResponse<MenuItem>>> CreateMenuItem([FromForm] MenuItemCreateDTO menuItemCreateDTO)
     {
         var response = new ApiResponse<MenuItem>();
@@ -85,6 +109,7 @@ public class MenuItemController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles =Constant.Role_Admin)]
     public async Task<ActionResult<ApiResponse<MenuItem>>> UpdateMenuItem(int id, [FromForm] MenuItemUpdateDTO menuItemUpdateDTO)
     {
         var response = new ApiResponse<MenuItem>();
@@ -129,6 +154,7 @@ public class MenuItemController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles =Constant.Role_Admin)]
     public async Task<ActionResult<ApiResponse<MenuItem>>> DeleteMenuItem(int id)
     {
         var response = new ApiResponse<MenuItem>();

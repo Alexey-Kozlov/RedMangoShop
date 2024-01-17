@@ -54,14 +54,14 @@ function Header() {
                                   <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                       Панель управления
                                   </a>
-                                  <ul className="dropdown-menu">
+                                  <ul className="dropdown-menu">                                      
+                                      <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/menuItemList')}>Товары</li>
                                       <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/allOrders')}>Все заказы</li>
                                       <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/authentication')}>Common</li>
                                       <li style={{cursor:'pointer'}} className="dropdown-item" onClick={()=>navigate('/authorization')}>Admin</li>
                                   </ul>
                               </li>
                           )}
-
                           <li className="nav-item">
                               <NavLink className="nav-link" aria-current="page" to="/shoppingCart">
                                 <i className='bi bi-cart'></i>&nbsp;

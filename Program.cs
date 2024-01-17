@@ -96,7 +96,7 @@ app.UseRouting();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

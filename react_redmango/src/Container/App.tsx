@@ -1,9 +1,9 @@
 
 import { Route, Routes } from 'react-router-dom';
 import { Footer, Header } from '../Components/Layout';
-import { AccessDenied, AllOrders, Home, Login, MenuItemDetail, NotFound, OrderDetail, Orders, Payment, Register, ShoppingCart, TestAuthAdmin, TestAuthCommon } from '../Pages';
+import { AccessDenied, AddMenuItem, AllOrders, Home, Login, MenuItemDetail, MenuItemList, NotFound, OrderDetail, Orders, Payment, Register, ShoppingCart, TestAuthAdmin, TestAuthCommon } from '../Pages';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetShoppingCartQuery } from '../Api/ShoppingCartApi';
 import { setShoppingCart } from '../Store/Redux/shoppingCartSlice';
 import { IUser } from '../Interfaces';
@@ -14,8 +14,11 @@ import { RootState } from '../Store/Redux/store';
 function App() {
 
   const dispatch = useDispatch();
+  const [skip, setSkip] = useState(true);
   const userData: IUser = useSelector((state: RootState) => state.authStore);
-  const { data, isLoading } = useGetShoppingCartQuery(userData.id);
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id, {
+    skip: skip
+  });
 
   useEffect(()=>{
     const token = localStorage.getItem('RM_Token');
@@ -25,10 +28,14 @@ function App() {
     }
   },[]);
   useEffect(() =>{
-    if(!isLoading){
+    if(!isLoading && data){
       dispatch(setShoppingCart(data.result?.cartItems));
     }
   },[data]);
+
+  useEffect(()=>{
+    if(userData.id) setSkip(false);
+  },[userData]);
 
   return (
     <div>
@@ -47,6 +54,9 @@ function App() {
           <Route path='/orders' element={<Orders />}></Route>
           <Route path='/allOrders' element={<AllOrders />}></Route>
           <Route path='/orderDetail/:id' element={<OrderDetail />}></Route>
+          <Route path='/menuItemList' element={<MenuItemList />}></Route>
+          <Route path='/addMenuItem' element={<AddMenuItem />}></Route>
+          <Route path='/addMenuItem/:id' element={<AddMenuItem />}></Route>
           <Route path='*' element={<NotFound />}></Route>
         </Routes>
       </div>

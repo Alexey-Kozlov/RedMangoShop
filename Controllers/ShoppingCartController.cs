@@ -1,15 +1,16 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RedMangoShop.Data;
 using RedMangoShop.Models;
-using RedMangoShop.Models.DTO;
 using System.Net;
 
 namespace RedMangoShop.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ShoppingCartController : ControllerBase
 {
     private readonly ApplicationDbContext _db;

@@ -32,6 +32,13 @@ function CartDetails() {
     const [userInput, setUserInput] = useState(initialUserData);
     const [initPayment] = useInitPaymentMutation();
 
+    useEffect(()=>{
+        setUserInput({
+            name: userData.name,
+            phone: userData.phone
+        });
+    },[userData]);
+
     const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const tempData = inputHelper(e, userInput);
         setUserInput(tempData);
@@ -60,7 +67,7 @@ function CartDetails() {
                 Покупатель
                 <input 
                 type='text' 
-                value={userInput.name ? userInput.name : initialUserData.name}
+                value={userInput.name}
                 onChange={handleUserInput}
                 className='form-control' 
                 placeholder='Покупатель...' 
@@ -71,7 +78,7 @@ function CartDetails() {
                 Телефон
                 <input 
                 type='text' 
-                value={userInput.phone ? userInput.phone : initialUserData.phone}
+                value={userInput.phone}
                 onChange={handleUserInput}
                 className='form-control' 
                 placeholder='Телефон...' 

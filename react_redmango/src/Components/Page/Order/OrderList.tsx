@@ -9,8 +9,7 @@ function OrderList({orderData} : OrderListProps) {
     const navigate = useNavigate();
 
   return (
-    <div className='table p-5'>
-            <h1 className='text-uccess'>Заказы</h1>
+    <div className='table px-5'>
             <div className='p-2'>
                 <div className='row border'>
                     <div className='col-1'>ID</div>

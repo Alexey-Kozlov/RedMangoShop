@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RedMangoShop.Data;
@@ -10,6 +11,7 @@ namespace RedMangoShop.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PaymentController : ControllerBase
 {
     private readonly ApplicationDbContext _db;
