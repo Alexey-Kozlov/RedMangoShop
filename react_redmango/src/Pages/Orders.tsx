@@ -18,7 +18,7 @@ const filterOptions = [
 function Orders() {
 
     const userId = useSelector((state:RootState) => state.authStore.id);
-    const {data, isLoading} = useGetOrdersQuery(userId);
+    const {data, isLoading} = useGetOrdersQuery({userId});
 
     if(isLoading) return <MainLoader />
 
@@ -27,7 +27,7 @@ function Orders() {
             <div className='d-flex align-items-center justify-content-between mx-5 mt-5'>
                 <h1 className='text-success'>Мои заказы</h1>
             </div>
-            <OrderList orderData={data.result} />
+            <OrderList orderData={data?.apiResponse.result} />
         </>
     )
 }

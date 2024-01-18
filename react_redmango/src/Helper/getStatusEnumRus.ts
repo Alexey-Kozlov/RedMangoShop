@@ -9,6 +9,7 @@ const getStatusEnumRus = (status_enum:Status_Constant) => {
         case Status_Constant.CONFIRMED: return 'Подтверждено';
         case Status_Constant.PENDING: return 'В подтверждении';
         case Status_Constant.READY_FOR_PICKUP: return 'Готово к покупке';
+        default: return 'Все';
     }
 }
 
