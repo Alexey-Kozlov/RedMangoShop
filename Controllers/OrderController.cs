@@ -53,7 +53,7 @@ public class OrderController : ControllerBase
             TotalRecords = await orderHeaders.CountAsync()
         };
 
-        Response.Headers.Add("X-Pagination",JsonSerializer.Serialize(pagination));
+        Response.Headers.Append("X-Pagination",JsonSerializer.Serialize(pagination));
 
         response.Result = await orderHeaders.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         response.StatusCode = HttpStatusCode.OK;

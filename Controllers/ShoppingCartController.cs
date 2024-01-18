@@ -35,7 +35,7 @@ public class ShoppingCartController : ControllerBase
             .Include(p => p.CartItems)
             .ThenInclude(p => p.MenuItem)
             .FirstOrDefaultAsync(p => p.UserId == userId);
-        if(shoppingCart.CartItems != null && shoppingCart.CartItems.Any())
+        if(shoppingCart != null && shoppingCart.CartItems != null && shoppingCart.CartItems.Any())
         {
             shoppingCart.CartTotal = shoppingCart.CartItems.Sum(p => p.Quantity * p.MenuItem.Price);
         }
