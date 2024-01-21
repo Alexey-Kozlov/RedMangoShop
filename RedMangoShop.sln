@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMangoShop", "RedMangoShop.csproj", "{804B5D7E-B6B1-4499-A466-161F06F77C4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedMangoShop", "API\RedMangoShop.csproj", "{804B5D7E-B6B1-4499-A466-161F06F77C4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
