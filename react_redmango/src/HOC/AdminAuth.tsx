@@ -1,5 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 import { Roles_Constant } from '../Utility/Constant';
+import { checkToken } from '../Helper';
 
 const AdminAuth = (WrappedComponent: any) => {
     return (props: any) => {
@@ -8,6 +9,7 @@ const AdminAuth = (WrappedComponent: any) => {
             window.location.replace('/login');
             return null;
         }
+        if(!checkToken()) return null;
 
         const decode: { role: string } = jwtDecode(accessToken);
         if (decode.role != Roles_Constant.ADMIN) {

@@ -21,7 +21,7 @@ function OrderList({orderData} : OrderListProps) {
                     <div className='col-2'>Статус</div>
                     <div className='col-1'></div>
                 </div>
-                {orderData.map((item: IOrderHeader, index: number) => {
+                {orderData && orderData.map((item: IOrderHeader, index: number) => {
                     return (
                         <div className='row border' key={index}>
                             <div className='col-1'>{item.orderHeaderId}</div>

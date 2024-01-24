@@ -11,7 +11,7 @@ using RedMangoShop.Models;
 var builder = WebApplication.CreateBuilder(args);
 //конфигурация EF Identity
 builder.Services.AddDbContext<ApplicationDbContext>(options =>{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultDbConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 //конфигурация пароля
