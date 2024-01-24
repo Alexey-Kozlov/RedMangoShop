@@ -10,6 +10,7 @@ import { IUser } from '../Interfaces';
 import { jwtDecode } from 'jwt-decode';
 import { setAuthUser } from '../Store/Redux/authSlice';
 import { RootState } from '../Store/Redux/store';
+import checkToken from '../Helper/checkToken';
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
 
   useEffect(()=>{
     const token = localStorage.getItem('RM_Token');
-    if(token){
+    if(checkToken()){
       const {name, id, login, role} : IUser = jwtDecode(token);
       dispatch(setAuthUser({name, id, login, role}));
     }
