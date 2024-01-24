@@ -7,7 +7,10 @@ const Auth = (WrappedComponent: any) => {
             window.location.replace('/login');
             return null;
         }
-        if(!checkToken()) return null;
+        if(!checkToken()){
+            window.location.replace('/login');
+            return null;
+        }
         return <WrappedComponent {...props} />;
     }
 }
