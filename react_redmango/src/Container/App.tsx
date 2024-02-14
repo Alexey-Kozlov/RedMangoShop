@@ -12,6 +12,8 @@ import { setAuthUser } from '../Store/Redux/authSlice';
 import { RootState } from '../Store/Redux/store';
 import checkToken from '../Helper/checkToken';
 
+type token = string | null;
+
 function App() {
 
   const dispatch = useDispatch();
@@ -21,22 +23,22 @@ function App() {
     skip: skip
   });
 
-  useEffect(()=>{
-    const token = localStorage.getItem('RM_Token');
-    if(checkToken()){
-      const {name, id, login, role} : IUser = jwtDecode(token);
-      dispatch(setAuthUser({name, id, login, role}));
+  useEffect(() => {
+    const token: token = localStorage.getItem('RM_Token');
+    if (checkToken()) {
+      const { name, id, login, role }: IUser = jwtDecode(token!);
+      dispatch(setAuthUser({ name, id, login, role }));
     }
-  },[]);
-  useEffect(() =>{
-    if(!isLoading && data){
+  }, []);
+  useEffect(() => {
+    if (!isLoading && data) {
       dispatch(setShoppingCart(data.result?.cartItems));
     }
-  },[data]);
+  }, [data]);
 
-  useEffect(()=>{
-    if(userData.id) setSkip(false);
-  },[userData]);
+  useEffect(() => {
+    if (userData.id) setSkip(false);
+  }, [userData]);
 
   return (
     <div>
